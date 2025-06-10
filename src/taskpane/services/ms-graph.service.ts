@@ -1,15 +1,24 @@
 import { AxiosResponse } from "axios";
-import { MicrosoftSettings } from "../utils/constants";
+import { MicrosoftRedirectUrls } from "../utils/constants";
 import { MicrosoftLoginResponse } from "../types/ms-graph-responses";
 import localStorageService from "./local-storage.service";
 import axiosClient from "../config/axios-client";
-import { getAttachmentAsFile, getComposeAttachmentContent } from "../utils/helpers";
+import { getAsyncProperty, getAttachmentAsFile } from "../utils/helpers";
 
 class MsGraphService {
+  /**
+   * Retrieves the Microsoft authentication redirect URI from the backend service.
+   *
+   * Sends a GET request to the `/ms-graph/auth/login` endpoint with the specified
+   * redirect URL as a query parameter. Returns the redirect URI provided in the response.
+   *
+   * @returns {Promise<string>} A promise that resolves to the Microsoft redirect URI.
+   * @throws Will throw an error if the request fails.
+   */
   private async getMicrosoftRedirectUri(): Promise<string> {
     try {
       const response = await axiosClient.get(
-        `/ms-graph/auth/login?redirect=${MicrosoftSettings.loginRedirectUrl}`
+        `/ms-graph/auth/login?redirect=${MicrosoftRedirectUrls.loginRedirectUrl}`
       );
       return response.data.data.redirectUri;
     } catch (error) {
@@ -18,6 +27,21 @@ class MsGraphService {
     }
   }
 
+  /**
+   * Initiates the Microsoft Graph login flow using an Office dialog.
+   *
+   * This method opens a dialog window for the user to authenticate with Microsoft.
+   * Upon successful authentication, it receives an authorization code, exchanges it
+   * for tokens via a backend endpoint, and stores the authenticated user's email in local storage.
+   *
+   * The dialog communicates with the add-in via message passing. On successful authentication,
+   * a success message is sent to the dialog child. Handles dialog closure and error scenarios.
+   *
+   * @returns {Promise<void>} A promise that resolves when the login process completes or fails.
+   *
+   * @throws Will log errors to the console if the dialog fails to open, if token exchange fails,
+   *         or if any unexpected error occurs during the login process.
+   */
   async loginWithMsGraph(): Promise<void> {
     try {
       const loginUrl = await this.getMicrosoftRedirectUri();
@@ -34,7 +58,7 @@ class MsGraphService {
             try {
               response = await axiosClient.post("/ms-graph/auth/obtain-tokens-outlook-plugin", {
                 code,
-                redirect: MicrosoftSettings.loginRedirectUrl,
+                redirect: MicrosoftRedirectUrls.loginRedirectUrl,
               });
             } catch (error) {
               console.error("Error fetching token:", error);
@@ -46,7 +70,7 @@ class MsGraphService {
             const email = data.email;
             localStorageService.setItemToLocalStorage("msPrincipal", email);
 
-            dialog.messageChild(MicrosoftSettings.redirectUrlSuccessfullAuth);
+            dialog.messageChild(MicrosoftRedirectUrls.redirectUrlSuccessfullAuth);
             // dialog.close();
           });
 
@@ -62,58 +86,36 @@ class MsGraphService {
     }
   }
 
+  /**
+   * Copies the current email's data and sends it to the backend server.
+   *
+   * This function collects various properties from the current Outlook email item,
+   * including subject, sender, recipients, body (HTML), creation date, and attachments.
+   * It then constructs a `FormData` object containing these properties, along with the
+   * user's principal (email address) retrieved from local storage. Attachments are
+   * processed and appended to the form data as files.
+   *
+   * The function sends the collected data to the backend endpoint `/ms-graph/upload-email-to-cloud`
+   * using a POST request with `multipart/form-data` encoding.
+   *
+   * @async
+   * @returns {Promise<void>} Resolves when the email data has been successfully sent to the backend.
+   * @throws Will log an error to the console if any step in the process fails.
+   */
   async copyAndSendEmailToBackend() {
     try {
       const formData = new FormData();
       const item = Office.context.mailbox.item;
 
-      // Subject
-      const subject = await new Promise<string>((resolve, reject) => {
-        item.subject.getAsync((result) => {
-          result.status === Office.AsyncResultStatus.Succeeded
-            ? resolve(result.value)
-            : reject(result.error);
-        });
-      });
-
-      // Sender (alternative to headers)
-      const from = await new Promise<string>((resolve, reject) => {
-        item.from.getAsync((result) => {
-          result.status === Office.AsyncResultStatus.Succeeded
-            ? resolve(result.value.emailAddress)
-            : reject(result.error);
-        });
-      });
-
-      // Recipients (alternative to headers)
-      const toRecipients = await new Promise<string[]>((resolve, reject) => {
-        item.to.getAsync((result) => {
-          result.status === Office.AsyncResultStatus.Succeeded
-            ? resolve(result.value.map((recipient) => recipient.emailAddress))
-            : reject(result.error);
-        });
-      });
-
-      const ccRecipients = await new Promise<string[]>((resolve, reject) => {
-        item.cc.getAsync((result) => {
-          result.status === Office.AsyncResultStatus.Succeeded
-            ? resolve(result.value.map((recipient) => recipient.emailAddress))
-            : reject(result.error);
-        });
-      });
-
-      // Date
-      const dateTimeCreated = item.dateTimeCreated || new Date().toISOString();
-      const formattedDate = new Date(dateTimeCreated).toISOString();
-
-      // Body HTML
-      const bodyHtml = await new Promise<string>((resolve, reject) => {
-        item.body.getAsync(Office.CoercionType.Html, (result) => {
-          result.status === Office.AsyncResultStatus.Succeeded
-            ? resolve(result.value)
-            : reject(result.error);
-        });
-      });
+      // collecting properties from the item
+      const subject = await getAsyncProperty(item.subject);
+      const from = (await getAsyncProperty(item.from))?.emailAddress || "";
+      const toRecipients = (await getAsyncProperty(item.to))?.map((r) => r.emailAddress) || [];
+      const ccRecipients = (await getAsyncProperty(item.cc))?.map((r) => r.emailAddress) || [];
+      const bodyHtml = await getAsyncProperty(item.body, Office.CoercionType.Html);
+      const formattedDate = new Date(
+        item.dateTimeCreated || new Date().toISOString()
+      ).toISOString();
 
       // Get attachments - COMPOSE MODE SPECIFIC
       const attachments = await new Promise<Office.AttachmentDetailsCompose[]>(
@@ -128,38 +130,23 @@ class MsGraphService {
         }
       );
 
-      // Attachments
-      const attachmentContents = await Promise.all(
-        attachments.map((att) => getComposeAttachmentContent(att.id))
-      );
-
-      const payload = {
-        subject,
-        from,
-        toRecipients,
-        ccRecipients,
-        formattedDate,
-        bodyHtml,
-        attachments: attachments.map((att, index) => ({
-          name: att.name,
-          contentType: att.attachmentType || "application/octet-stream",
-          contentBytes: attachmentContents[index],
-        })),
-      };
-
+      // Getting user principle (email of user)
       const userPrincipal = localStorageService.getItemFromLocalStorage("msPrincipal");
 
+      formData.append("userPrincipal", userPrincipal || "");
       formData.append("subject", subject);
       formData.append("from", from);
       formData.append("toRecipients", JSON.stringify(toRecipients));
       formData.append("ccRecipients", JSON.stringify(ccRecipients));
       formData.append("date", formattedDate);
       formData.append("bodyHtml", bodyHtml);
-      formData.append("userPrincipal", userPrincipal || "");
 
       for (const attachment of attachments) {
+        console.log("Processing attachment:", attachment.name);
+        console.log("attachment type:", attachment.attachmentType);
+        console.log("type: ", typeof attachment);
         const file = await getAttachmentAsFile(attachment);
-        formData.append("attachments", file, file.name);
+        formData.append("attachments", file);
       }
 
       await axiosClient.post("/ms-graph/upload-email-to-cloud", formData, {
