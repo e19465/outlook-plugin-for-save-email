@@ -1,7 +1,7 @@
 import { Button, makeStyles } from "@fluentui/react-components";
 import { Cloud24Regular, Person24Regular } from "@fluentui/react-icons";
 import React, { useEffect, useState } from "react";
-import LoginDialog from "./LoginDialog";
+import SaveDialog from "./SaveDialog";
 
 const useStyles = makeStyles({
   buttonContainer: {
@@ -53,7 +53,7 @@ const ButtonsContainer: React.FC = () => {
           </>
         )}
       </div>
-      <LoginDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+      <SaveDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
     </>
   );
 };
