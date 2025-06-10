@@ -29,6 +29,7 @@ const ButtonsContainer: React.FC = () => {
     setIsMailSaving(true);
     console.log("executed save");
     setIsMailSaving(false);
+    setIsDialogOpen(false);
   };
 
   const handleSignOut = () => {
