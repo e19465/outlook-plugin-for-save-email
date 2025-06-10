@@ -96,17 +96,17 @@ module.exports = async (env, options) => {
       }),
       new HtmlWebpackPlugin({
         filename: "redirect.html",
-        template: "./src/taskpane/pages/redirect.html",
+        template: "./src/taskpane/dialog-pages/redirect.html",
         inject: false,
       }),
       new HtmlWebpackPlugin({
         filename: "microsoft_authentication_error.html",
-        template: "./src/taskpane/pages/microsoft_authentication_error.html",
+        template: "./src/taskpane/dialog-pages/microsoft_authentication_error.html",
         inject: false,
       }),
       new HtmlWebpackPlugin({
-        filename: "authentication_successfull.html",
-        template: "./src/taskpane/pages/authentication_successfull.html",
+        filename: "authentication_successful.html",
+        template: "./src/taskpane/dialog-pages/authentication_successful.html",
         inject: false,
       }),
       new webpack.ProvidePlugin({

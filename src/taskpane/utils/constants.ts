@@ -8,8 +8,8 @@ export const MicrosoftSettings = {
   loginUrl: `https://login.microsoftonline.com/${MICROSOFT_TENANT_ID}/oauth2/v2.0/authorize`,
   responseType: "code",
   responseMode: "query",
-  redirectUrl: `https://localhost:3000/redirect.html`,
-  redirectUrlSuccessfullAuth: "https://localhost:3000/authentication_successfull.html",
+  loginRedirectUrl: `https://localhost:3000/redirect.html`,
+  redirectUrlSuccessfullAuth: "https://localhost:3000/authentication_successful.html",
   allowHttpForRedirectUrl: true,
   scope: [
     "openid",

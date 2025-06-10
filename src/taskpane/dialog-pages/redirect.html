@@ -58,6 +58,18 @@
       }
     </style>
     <script>
+      // First: define the initialize function (needed by Office.js for event wiring)
+      Office.initialize = function () {
+        Office.context.ui.addHandlerAsync(
+          Office.EventType.DialogParentMessageReceived,
+          function (arg) {
+            const redirectUrl = arg.message;
+            window.location.href = redirectUrl;
+          }
+        );
+      };
+
+      // Then: run Office.onReady logic
       Office.onReady()
         .then(() => {
           const params = new URLSearchParams(window.location.search);

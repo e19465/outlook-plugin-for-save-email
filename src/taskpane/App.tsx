@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@fluentui/react-components";
 import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
 import msGraphService from "./services/ms-graph.service";
@@ -53,9 +53,23 @@ const useStyles = makeStyles({
 });
 
 const App: React.FC = () => {
-  const [signedIn, setSignedIn] = useState<boolean>(localStorage.getItem("SignedIn") === "true");
+  const [signedIn, setSignedIn] = useState<boolean>(
+    localStorage.getItem("msPrincipal") ? true : false
+  );
   const [isModelOpen, setIsModelOpen] = useState<boolean>(false);
   const styles = useStyles();
+
+  useEffect(() => {
+    const checkSignInStatus = () => {
+      const msPrincipal = localStorage.getItem("msPrincipal");
+      if (msPrincipal) {
+        setSignedIn(true);
+      } else {
+        setSignedIn(false);
+      }
+    };
+    checkSignInStatus();
+  }, [localStorage.getItem("msPrincipal"), signedIn]);
 
   const handleSignIn = async () => {
     setSignedIn(true);
@@ -69,7 +83,7 @@ const App: React.FC = () => {
 
   const handleSignOut = () => {
     setSignedIn(false);
-    localStorage.removeItem("SignedIn");
+    localStorage.removeItem("msPrincipal");
   };
 
   const openModel = () => {
@@ -94,6 +108,13 @@ const App: React.FC = () => {
         </button>
       </div>
       {signedIn && <p className={styles.textGreen}>You have successfully signed in</p>}
+      {signedIn && (
+        <p className={styles.textGreen}>
+          {localStorage.getItem("msPrincipal")
+            ? `Welcome, ${localStorage.getItem("msPrincipal")}`
+            : "Welcome, User"}
+        </p>
+      )}
       {!signedIn && <p className={styles.textRed}>You have successfully signed out</p>}
       {isModelOpen && (
         <div className={styles.modelContainer} onClick={closeModel}>
