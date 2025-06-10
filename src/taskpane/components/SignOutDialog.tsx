@@ -10,15 +10,14 @@ import {
   DialogActions,
   makeStyles,
 } from "@fluentui/react-components";
-import { Dismiss24Regular, Save24Regular } from "@fluentui/react-icons";
+import { Dismiss24Regular, SignOut24Regular } from "@fluentui/react-icons";
 import React, { Dispatch } from "react";
 import { useGeneralStyles } from "../globals.css";
 
-interface SaveDialogProps {
+interface SignOutDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: Dispatch<React.SetStateAction<boolean>>;
   handleAccept: () => void;
-  isMailSaving: boolean;
 }
 
 const useStyles = makeStyles({
@@ -32,11 +31,10 @@ const useStyles = makeStyles({
   },
 });
 
-const SaveDialog: React.FC<SaveDialogProps> = ({
+const SignOutDialog: React.FC<SignOutDialogProps> = ({
   isDialogOpen,
   setIsDialogOpen,
   handleAccept,
-  isMailSaving,
 }) => {
   const styles = useStyles();
   const generalStyles = useGeneralStyles();
@@ -53,13 +51,13 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
             }
           >
             <div className={styles.header}>
-              <Save24Regular />
-              <span className={generalStyles.textLarge}>Save Email to OneDrive</span>
+              <SignOut24Regular />
+              <span className={generalStyles.textLarge}>Sign Out</span>
             </div>
           </DialogTitle>
           <DialogContent>
             <Body1>
-              This will save the current email to your OneDrive as a PDF file with all attachments.
+              This will sign you out from the plugin, You have to sign in again to save an email
             </Body1>
             {/* Add form elements here for file naming and location selection */}
           </DialogContent>
@@ -68,7 +66,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
               Cancel
             </Button>
             <Button appearance="primary" onClick={handleAccept}>
-              {isMailSaving ? "Saving..." : "Save to OneDrive"}
+              Logout
             </Button>
           </DialogActions>
         </DialogBody>
@@ -77,4 +75,4 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
   );
 };
 
-export default SaveDialog;
+export default SignOutDialog;

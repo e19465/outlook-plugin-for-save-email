@@ -7,8 +7,8 @@
   <Version>1.0.0.0</Version>
   <ProviderName>DevMinds</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Save To Cloud"/>
-  <Description DefaultValue="A secure solution to save and organize your Outlook emails directly to OneDrive"/>
+  <DisplayName DefaultValue="OneMail Drive"/>
+  <Description DefaultValue="Save Outlook emails to OneDrive in one click—with attachments. Automatically organize, archive, and access messages anywhere, backed by Microsoft's security."/>
   <IconUrl DefaultValue="https://localhost:3000/assets/logo.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/logo.png"/>
   <SupportUrl DefaultValue="https://www.contoso.com/help"/>

@@ -3,6 +3,7 @@ import { Cloud24Regular, Person24Regular } from "@fluentui/react-icons";
 import React, { useEffect, useState } from "react";
 import SaveDialog from "./SaveDialog";
 import { useAuth } from "../context/AuthContext";
+import SignOutDialog from "./SignOutDialog";
 
 const useStyles = makeStyles({
   buttonContainer: {
@@ -21,6 +22,19 @@ const ButtonsContainer: React.FC = () => {
   const styles = useStyles();
   const { isSignedIn, signOut } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isMailSaving, setIsMailSaving] = useState<boolean>(false);
+  const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState<boolean>(false);
+
+  const handleSave = () => {
+    setIsMailSaving(true);
+    console.log("executed save");
+    setIsMailSaving(false);
+  };
+
+  const handleSignOut = () => {
+    signOut();
+    setIsSignOutDialogOpen(false);
+  };
 
   return (
     <>
@@ -34,13 +48,27 @@ const ButtonsContainer: React.FC = () => {
             >
               Save Email
             </Button>
-            <Button appearance="secondary" icon={<Person24Regular />} onClick={signOut}>
+            <Button
+              appearance="secondary"
+              icon={<Person24Regular />}
+              onClick={() => setIsSignOutDialogOpen(true)}
+            >
               Sign Out
             </Button>
           </>
         )}
       </div>
-      <SaveDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+      <SaveDialog
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        handleAccept={handleSave}
+        isMailSaving={isMailSaving}
+      />
+      <SignOutDialog
+        isDialogOpen={isSignOutDialogOpen}
+        setIsDialogOpen={setIsSignOutDialogOpen}
+        handleAccept={handleSignOut}
+      />
     </>
   );
 };
