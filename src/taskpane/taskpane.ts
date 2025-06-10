@@ -1,5 +1,3 @@
-/* global Office console */
-
 export async function insertText(text: string) {
   // Write text to the cursor point in the compose surface.
   try {

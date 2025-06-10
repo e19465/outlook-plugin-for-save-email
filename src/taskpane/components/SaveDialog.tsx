@@ -13,12 +13,14 @@ import {
 import { Dismiss24Regular, Save24Regular } from "@fluentui/react-icons";
 import React, { Dispatch } from "react";
 import { useGeneralStyles } from "../globals.css";
+import { joinClasses } from "../utils/helpers";
 
 interface SaveDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: Dispatch<React.SetStateAction<boolean>>;
   handleAccept: () => void;
   isMailSaving: boolean;
+  isError: boolean;
 }
 
 const useStyles = makeStyles({
@@ -32,8 +34,14 @@ const useStyles = makeStyles({
   },
   saveTextContainer: {
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+  },
+  errorTextContainer: {
+    backgroundColor: "#fdf6f6",
+    textAlign: "center",
+    padding: "0 10px",
   },
 });
 
@@ -42,6 +50,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
   setIsDialogOpen,
   handleAccept,
   isMailSaving,
+  isError,
 }) => {
   const styles = useStyles();
   const generalStyles = useGeneralStyles();
@@ -68,6 +77,15 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
                 This will save the current email to your OneDrive as a PDF file with all
                 attachments.
               </div>
+              {isError && (
+                <div className={styles.errorTextContainer}>
+                  <span
+                    className={joinClasses([generalStyles.errorText, generalStyles.textCenter])}
+                  >
+                    An error occurred while saving the email. Please try again.
+                  </span>
+                </div>
+              )}
             </Body1>
             {/* Add form elements here for file naming and location selection */}
           </DialogContent>

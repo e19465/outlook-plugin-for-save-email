@@ -3,6 +3,8 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
+
+
   <Id>45a0ca8e-c5df-48cd-9c2a-9a00cced29ae</Id>
   <Version>1.0.0.0</Version>
   <ProviderName>DevMinds</ProviderName>
@@ -12,20 +14,28 @@
   <IconUrl DefaultValue="https://localhost:3000/assets/logo.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/logo.png"/>
   <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+
+
   <AppDomains>
     <AppDomain>https://localhost:3000</AppDomain>
     <AppDomain>https://www.contoso.com</AppDomain>
     <AppDomain>https://login.microsoftonline.com</AppDomain>
     <AppDomain>https://graph.microsoft.com</AppDomain>
   </AppDomains>
+
+
   <Hosts>
     <Host Name="Mailbox"/>
   </Hosts>
+
+
   <Requirements>
     <Sets>
       <Set Name="Mailbox" MinVersion="1.1"/>
     </Sets>
   </Requirements>
+
+
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
@@ -34,10 +44,16 @@
       </DesktopSettings>
     </Form>
   </FormSettings>
+
+
   <Permissions>ReadWriteItem</Permissions>
+
+
   <Rule xsi:type="RuleCollection" Mode="Or">
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
   </Rule>
+
+
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
     <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
       <Requirements>
@@ -46,9 +62,12 @@
         </bt:Sets>
       </Requirements>
       <Hosts>
+
         <Host xsi:type="MailHost">
           <DesktopFormFactor>
             <FunctionFile resid="Commands.Url"/>
+
+            <!-- This is show in Ribbon when try to compose new message -->
             <ExtensionPoint xsi:type="MessageComposeCommandSurface">
               <OfficeTab id="TabDefault">
                 <Group id="msgComposeGroup">
@@ -68,27 +87,13 @@
                       <SourceLocation resid="Taskpane.Url"/>
                     </Action>
                   </Control>
-                  <Control xsi:type="Button" id="ActionButton">
-                    <Label resid="ActionButton.Label"/>
-                    <Supertip>
-                      <Title resid="ActionButton.Label"/>
-                      <Description resid="ActionButton.Tooltip"/>
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="Icon.16x16"/>
-                      <bt:Image size="32" resid="Icon.32x32"/>
-                      <bt:Image size="80" resid="Icon.80x80"/>
-                    </Icon>
-                    <Action xsi:type="ExecuteFunction">
-                      <FunctionName>action</FunctionName>
-                    </Action>
-                  </Control>
                 </Group>
               </OfficeTab>
             </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
       </Hosts>
+
       <Resources>
         <bt:Images>
           <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/logo.png"/>
@@ -100,14 +105,13 @@
           <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
-          <bt:String id="GroupLabel" DefaultValue="Contoso Add-in"/>
-          <bt:String id="TaskpaneButton.Label" DefaultValue="Show Task Pane"/>
-          <bt:String id="ActionButton.Label" DefaultValue="Perform an action"/>
+          <bt:String id="GroupLabel" DefaultValue="OneMail Drive"/>
+          <bt:String id="TaskpaneButton.Label" DefaultValue="Open OneMail Drive"/>
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane that enables users to insert text."/>
-          <bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
+          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens the emal saving interface"/>
         </bt:LongStrings>
+
       </Resources>
     </VersionOverrides>
   </VersionOverrides>

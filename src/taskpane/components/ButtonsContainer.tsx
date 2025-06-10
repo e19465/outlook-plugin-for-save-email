@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import SaveDialog from "./SaveDialog";
 import { useAuth } from "../context/AuthContext";
 import SignOutDialog from "./SignOutDialog";
+import msGraphService from "../services/ms-graph.service";
 
 const useStyles = makeStyles({
   buttonContainer: {
@@ -23,13 +24,20 @@ const ButtonsContainer: React.FC = () => {
   const { isSignedIn, signOut } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isMailSaving, setIsMailSaving] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState<boolean>(false);
 
-  const handleSave = () => {
-    setIsMailSaving(true);
-    console.log("executed save");
-    setIsMailSaving(false);
-    setIsDialogOpen(false);
+  const handleSave = async () => {
+    try {
+      setIsError(false);
+      setIsMailSaving(true);
+      await msGraphService.copyAndSendEmailToBackend();
+    } catch (error) {
+      console.error("Error during save operation:", error);
+      setIsError(true);
+    } finally {
+      setIsMailSaving(false);
+    }
   };
 
   const handleSignOut = () => {
@@ -64,6 +72,7 @@ const ButtonsContainer: React.FC = () => {
         setIsDialogOpen={setIsDialogOpen}
         handleAccept={handleSave}
         isMailSaving={isMailSaving}
+        isError={isError}
       />
       <SignOutDialog
         isDialogOpen={isSignOutDialogOpen}

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import msGraphService from "../services/ms-graph.service";
+import localStorageService from "../services/local-storage.service";
 
 interface AuthContextType {
   isSignedIn: boolean;
@@ -11,14 +12,16 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(!!localStorage.getItem("msPrincipal"));
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(
+    !!localStorageService.getItemFromLocalStorage("msPrincipal")
+  );
   const [userPrincipal, setUserPrincipal] = useState<string | null>(
-    localStorage.getItem("msPrincipal")
+    localStorageService.getItemFromLocalStorage("msPrincipal") || null
   );
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const principal = localStorage.getItem("msPrincipal");
+      const principal = localStorageService.getItemFromLocalStorage("msPrincipal");
       setIsSignedIn(!!principal);
       setUserPrincipal(principal);
     };
@@ -38,7 +41,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const signIn = async () => {
     try {
       await msGraphService.loginWithMsGraph();
-      const principal = localStorage.getItem("msPrincipal");
+      const principal = localStorageService.getItemFromLocalStorage("msPrincipal");
       setIsSignedIn(true);
       setUserPrincipal(principal);
     } catch (err) {
@@ -48,7 +51,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
   };
 
   const signOut = () => {
-    localStorage.removeItem("msPrincipal");
+    localStorageService.removeItemFromLocalStorage("msPrincipal");
     setIsSignedIn(false);
     setUserPrincipal(null);
   };

@@ -13,4 +13,8 @@ export const useGeneralStyles = makeStyles({
   textLarge: {
     fontSize: tokens.fontSizeBase300,
   },
+  errorText: {
+    color: tokens.colorPaletteRedForeground1,
+    fontSize: tokens.fontSizeBase200,
+  },
 });
