@@ -8,16 +8,32 @@ import {
   DialogContent,
   Body1,
   DialogActions,
+  makeStyles,
 } from "@fluentui/react-components";
 import { Dismiss24Regular, Save24Regular } from "@fluentui/react-icons";
 import React, { Dispatch } from "react";
+import { useGeneralStyles } from "../globals.css";
 
 interface SaveDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
+const useStyles = makeStyles({
+  header: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+  },
+});
+
 const SaveDialog: React.FC<SaveDialogProps> = ({ isDialogOpen, setIsDialogOpen }) => {
+  const styles = useStyles();
+  const generalStyles = useGeneralStyles();
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={(_, { open }) => setIsDialogOpen(open)}>
       <DialogSurface>
@@ -29,12 +45,14 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ isDialogOpen, setIsDialogOpen }
               </DialogTrigger>
             }
           >
-            <Save24Regular /> Save Email to OneDrive
+            <div className={styles.header}>
+              <Save24Regular />
+              <span className={generalStyles.textLarge}>Save Email to OneDrive</span>
+            </div>
           </DialogTitle>
           <DialogContent>
             <Body1>
-              This will save the currently selected email to your OneDrive as a PDF file with all
-              attachments. Choose a location and file name below.
+              This will save the current email to your OneDrive as a PDF file with all attachments.
             </Body1>
             {/* Add form elements here for file naming and location selection */}
           </DialogContent>

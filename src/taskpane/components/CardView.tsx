@@ -1,8 +1,8 @@
+import React from "react";
 import { Body1, Button, makeStyles, Title3, tokens } from "@fluentui/react-components";
 import { Cloud24Regular, LockClosed24Regular, Save24Regular } from "@fluentui/react-icons";
-import React, { useEffect, useState } from "react";
 import { useGeneralStyles } from "../globals.css";
-import msGraphService from "../services/ms-graph.service";
+import { useAuth } from "../context/AuthContext";
 
 const useStyles = makeStyles({
   contentCard: {
@@ -52,28 +52,11 @@ const useStyles = makeStyles({
 const CardView: React.FC = () => {
   const styles = useStyles();
   const generalStyles = useGeneralStyles();
-  const [signedIn, setSignedIn] = useState<boolean>(!!localStorage.getItem("msPrincipal"));
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSignedIn(!!localStorage.getItem("msPrincipal"));
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSignIn = async () => {
-    try {
-      await msGraphService.loginWithMsGraph();
-      setSignedIn(true);
-    } catch (err: any) {
-      console.error("Something went wrong while signing in:", err);
-    }
-  };
+  const { isSignedIn, signIn } = useAuth();
 
   return (
     <>
-      {signedIn ? (
+      {isSignedIn ? (
         <div className={styles.contentCard}>
           <Title3>How to use this plugin</Title3>
           <Body1>
@@ -107,12 +90,7 @@ const CardView: React.FC = () => {
             Connect your Microsoft account to start saving Outlook emails directly to your OneDrive.
             Your credentials are handled securely by Microsoft's authentication system.
           </Body1>
-          <Button
-            appearance="primary"
-            size="large"
-            icon={<LockClosed24Regular />}
-            onClick={handleSignIn}
-          >
+          <Button appearance="primary" size="large" icon={<LockClosed24Regular />} onClick={signIn}>
             Sign In with Microsoft
           </Button>
         </div>

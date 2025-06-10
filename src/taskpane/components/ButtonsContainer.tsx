@@ -2,6 +2,7 @@ import { Button, makeStyles } from "@fluentui/react-components";
 import { Cloud24Regular, Person24Regular } from "@fluentui/react-icons";
 import React, { useEffect, useState } from "react";
 import SaveDialog from "./SaveDialog";
+import { useAuth } from "../context/AuthContext";
 
 const useStyles = makeStyles({
   buttonContainer: {
@@ -18,27 +19,13 @@ const useStyles = makeStyles({
 
 const ButtonsContainer: React.FC = () => {
   const styles = useStyles();
-
-  const [signedIn, setSignedIn] = useState<boolean>(!!localStorage.getItem("msPrincipal"));
+  const { isSignedIn, signOut } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSignedIn(!!localStorage.getItem("msPrincipal"));
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSignOut = () => {
-    localStorage.removeItem("msPrincipal");
-    setSignedIn(false);
-  };
 
   return (
     <>
       <div className={styles.buttonContainer}>
-        {signedIn && (
+        {isSignedIn && (
           <>
             <Button
               appearance="primary"
@@ -47,7 +34,7 @@ const ButtonsContainer: React.FC = () => {
             >
               Save Email
             </Button>
-            <Button appearance="secondary" icon={<Person24Regular />} onClick={handleSignOut}>
+            <Button appearance="secondary" icon={<Person24Regular />} onClick={signOut}>
               Sign Out
             </Button>
           </>

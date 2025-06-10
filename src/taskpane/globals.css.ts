@@ -4,7 +4,13 @@ export const useGeneralStyles = makeStyles({
   textCenter: {
     textAlign: "center",
   },
+  textSmall: {
+    fontSize: tokens.fontSizeBase100,
+  },
   textMedium: {
     fontSize: tokens.fontSizeBase200,
+  },
+  textLarge: {
+    fontSize: tokens.fontSizeBase300,
   },
 });

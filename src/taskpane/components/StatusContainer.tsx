@@ -1,6 +1,7 @@
+import React from "react";
 import { Body1, makeStyles, tokens } from "@fluentui/react-components";
 import { Mail24Regular, Person24Regular } from "@fluentui/react-icons";
-import React, { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const useStyles = makeStyles({
   statusContainer: {
@@ -16,23 +17,15 @@ const useStyles = makeStyles({
 
 const StatusContainer: React.FC = () => {
   const styles = useStyles();
-  const [signedIn, setSignedIn] = useState<boolean>(!!localStorage.getItem("msPrincipal"));
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSignedIn(!!localStorage.getItem("msPrincipal"));
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { isSignedIn, userPrincipal } = useAuth();
 
   return (
     <div className={styles.statusContainer}>
-      {signedIn ? (
+      {isSignedIn ? (
         <>
           <Mail24Regular className={styles.featureIcon} />
           <Body1>
-            Welcome, <strong>{localStorage.getItem("msPrincipal") || "User"}</strong>
+            Welcome, <strong>{userPrincipal || ""}</strong>
           </Body1>
         </>
       ) : (

@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import ButtonsContainer from "./components/ButtonsContainer";
 import StatusContainer from "./components/StatusContainer";
 import CardView from "./components/CardView";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const useStyles = makeStyles({
   root: {
@@ -21,12 +22,14 @@ const App: React.FC = () => {
   const styles = useStyles();
 
   return (
-    <div className={styles.root}>
-      <Header />
-      <ButtonsContainer />
-      <StatusContainer />
-      <CardView />
-    </div>
+    <AuthContextProvider>
+      <div className={styles.root}>
+        <Header />
+        <ButtonsContainer />
+        <StatusContainer />
+        <CardView />
+      </div>
+    </AuthContextProvider>
   );
 };
 
