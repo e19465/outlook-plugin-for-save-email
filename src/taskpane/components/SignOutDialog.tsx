@@ -29,6 +29,11 @@ const useStyles = makeStyles({
     justifyContent: "center",
     gap: "10px",
   },
+  signOutTextContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 const SignOutDialog: React.FC<SignOutDialogProps> = ({
@@ -56,8 +61,10 @@ const SignOutDialog: React.FC<SignOutDialogProps> = ({
             </div>
           </DialogTitle>
           <DialogContent>
-            <Body1>
-              This will sign you out from the plugin, You have to sign in again to save an email
+            <Body1 className={styles.signOutTextContainer}>
+              <div className={generalStyles.textCenter}>
+                Th is will sign you out from the plugin, You have to sign in again to save an email
+              </div>
             </Body1>
             {/* Add form elements here for file naming and location selection */}
           </DialogContent>

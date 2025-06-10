@@ -30,6 +30,11 @@ const useStyles = makeStyles({
     justifyContent: "center",
     gap: "10px",
   },
+  saveTextContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 const SaveDialog: React.FC<SaveDialogProps> = ({
@@ -58,8 +63,11 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
             </div>
           </DialogTitle>
           <DialogContent>
-            <Body1>
-              This will save the current email to your OneDrive as a PDF file with all attachments.
+            <Body1 className={styles.saveTextContainer}>
+              <div className={generalStyles.textCenter}>
+                This will save the current email to your OneDrive as a PDF file with all
+                attachments.
+              </div>
             </Body1>
             {/* Add form elements here for file naming and location selection */}
           </DialogContent>
