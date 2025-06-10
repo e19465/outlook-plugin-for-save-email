@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authentication Successful</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #e9ecef 0%, #f8fafc 100%);
+        font-family: "Segoe UI", "Arial", sans-serif;
+        color: #22223b;
+      }
+      .container {
+        background: #fff;
+        padding: 2.5rem 2rem;
+        border-radius: 18px;
+        box-shadow:
+          0 8px 32px rgba(60, 60, 90, 0.08),
+          0 1.5px 4px rgba(60, 60, 90, 0.04);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 320px;
+      }
+      .success-icon {
+        margin-bottom: 1.5rem;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .success-icon svg {
+        width: 48px;
+        height: 48px;
+        fill: #4fcb4f;
+      }
+      .message {
+        font-size: 1.15rem;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      .subtle {
+        font-size: 0.97rem;
+        color: #6c757d;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" fill="#eaffea" />
+          <path d="M8 13l3 3 5-5" stroke="#4fcb4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="message">Authentication successful!</div>
+      <div class="subtle">You may now close this window.</div>
+    </div>
+  </body>
+</html>

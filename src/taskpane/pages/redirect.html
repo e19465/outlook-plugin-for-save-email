@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Microsoft Redirect</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #e9ecef 0%, #f8fafc 100%);
+        font-family: "Segoe UI", "Arial", sans-serif;
+        color: #22223b;
+      }
+      .container {
+        background: #fff;
+        padding: 2.5rem 2rem;
+        border-radius: 18px;
+        box-shadow:
+          0 8px 32px rgba(60, 60, 90, 0.08),
+          0 1.5px 4px rgba(60, 60, 90, 0.04);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 320px;
+      }
+      .spinner {
+        margin-bottom: 1.5rem;
+        width: 48px;
+        height: 48px;
+        border: 5px solid #e0e0e0;
+        border-top: 5px solid #4f8cff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .message {
+        font-size: 1.15rem;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      .subtle {
+        font-size: 0.97rem;
+        color: #6c757d;
+        text-align: center;
+      }
+    </style>
+    <script>
+      Office.onReady()
+        .then(() => {
+          const params = new URLSearchParams(window.location.search);
+          const code = params.get("code");
+
+          if (code) {
+            Office.context.ui.messageParent(code);
+          } else {
+            document.querySelector(".message").textContent = "Failed to authenticate.";
+            document.querySelector(".spinner").style.display = "none";
+            document.querySelector(".subtle").style.display = "none";
+          }
+        })
+        .catch((err) => {
+          console.error("Office.js failed to initialize:", err);
+          document.querySelector(".message").textContent = "Office.js failed to initialize.";
+          document.querySelector(".spinner").style.display = "none";
+          document.querySelector(".subtle").style.display = "none";
+        });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="spinner"></div>
+      <div class="message">Hang tight, we are working on completing your authentication...</div>
+      <div class="subtle">
+        This window will close automatically when authentication is complete.
+      </div>
+    </div>
+  </body>
+</html>
