@@ -170,7 +170,7 @@ class MsGraphService {
 
   async checkAuthenticationStatus(): Promise<boolean> {
     try {
-      await axiosClient.post("/ms-graph/auth/check-authentication-status-outlook-plugin", {
+      await axiosClient.post("/ms-graph/auth/check-authentication-status", {
         email: localStorageService.getItemFromLocalStorage("msPrincipal"),
       });
       return true;
