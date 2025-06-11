@@ -7,6 +7,7 @@ const useStyles = makeStyles({
   statusContainer: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     gap: "8px",
   },
   featureIcon: {

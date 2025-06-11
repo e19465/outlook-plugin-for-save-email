@@ -66,7 +66,6 @@ const SignOutDialog: React.FC<SignOutDialogProps> = ({
                 Th is will sign you out from the plugin, You have to sign in again to save an email
               </div>
             </Body1>
-            {/* Add form elements here for file naming and location selection */}
           </DialogContent>
           <DialogActions>
             <Button appearance="secondary" onClick={() => setIsDialogOpen(false)}>

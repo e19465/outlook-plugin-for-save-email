@@ -3,13 +3,14 @@ import { Body1, Button, makeStyles, Title3, tokens } from "@fluentui/react-compo
 import { Cloud24Regular, LockClosed24Regular, Save24Regular } from "@fluentui/react-icons";
 import { useGeneralStyles } from "../globals.css";
 import { useAuth } from "../context/AuthContext";
+import { joinClasses } from "../utils/helpers";
 
 const useStyles = makeStyles({
   contentCard: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
     gap: "20px",
     backgroundColor: tokens.colorNeutralBackground1,
     borderRadius: tokens.borderRadiusMedium,
@@ -33,7 +34,8 @@ const useStyles = makeStyles({
     gap: "12px",
   },
   featureIcon: {
-    fontSize: "48px",
+    width: "50px",
+    height: "50px",
     color: tokens.colorBrandForeground1,
   },
   signInSection: {
@@ -41,11 +43,13 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: "24px",
+    gap: "16px",
     textAlign: "center",
-    maxWidth: "500px",
-    margin: "0 auto",
-    padding: "0px 10px 40px",
+    padding: "10px",
+    backgroundColor: tokens.colorNeutralBackground1,
+    margin: "20px auto 0",
+    border: `1px solid ${tokens.colorNeutralStroke1}`,
+    borderRadius: tokens.borderRadiusMedium,
   },
 });
 
@@ -58,10 +62,12 @@ const CardView: React.FC = () => {
     <>
       {isSignedIn ? (
         <div className={styles.contentCard}>
-          <Title3>How to use this plugin</Title3>
-          <Body1>
-            Select an email in Outlook and click the "Save Email" button to store it in your
-            OneDrive. Your emails will be saved as PDF files with all attachments preserved.
+          <Title3 className={generalStyles.textLeft}>How to use this plugin</Title3>
+          <Body1 className={generalStyles.textLeft}>
+            After composing your email and adding any attachments, click "Save Email" to securely
+            store it in your OneDrive. Emails are saved as HTML in the "Outlook_Plugin_Emails"
+            folder, with attachments placed in "Outlook_Plugin_Email_Attachments" and accessible via
+            direct links
           </Body1>
 
           <div className={styles.featureGrid}>
@@ -90,7 +96,13 @@ const CardView: React.FC = () => {
             Connect your Microsoft account to start saving Outlook emails directly to your OneDrive.
             Your credentials are handled securely by Microsoft's authentication system.
           </Body1>
-          <Button appearance="primary" size="large" icon={<LockClosed24Regular />} onClick={signIn}>
+          <Button
+            appearance="primary"
+            size="large"
+            icon={<LockClosed24Regular />}
+            onClick={signIn}
+            className={joinClasses([generalStyles.textLarge, generalStyles.widthFull])}
+          >
             Sign In with Microsoft
           </Button>
         </div>

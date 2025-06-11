@@ -87,7 +87,6 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
                 </div>
               )}
             </Body1>
-            {/* Add form elements here for file naming and location selection */}
           </DialogContent>
           <DialogActions>
             <Button appearance="secondary" onClick={() => setIsDialogOpen(false)}>
