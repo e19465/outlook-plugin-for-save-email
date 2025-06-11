@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { FluentProvider, webLightTheme, webDarkTheme } from "@fluentui/react-components";
 import { ThemeType } from "./types/shared";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const rootElement: HTMLElement | null = document.getElementById("container");
 const root = rootElement ? createRoot(rootElement) : undefined;
@@ -14,9 +15,11 @@ Office.onReady(() => {
     const currentTheme = theme === "dark" ? webDarkTheme : webLightTheme;
 
     return (
-      <FluentProvider theme={currentTheme}>
-        <App theme={theme} setTheme={setTheme} />
-      </FluentProvider>
+      <AuthContextProvider>
+        <FluentProvider theme={currentTheme}>
+          <App theme={theme} setTheme={setTheme} />
+        </FluentProvider>
+      </AuthContextProvider>
     );
   };
 

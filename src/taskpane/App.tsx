@@ -1,12 +1,12 @@
-import React from "react";
-import { Button, makeStyles, tokens } from "@fluentui/react-components";
+import React, { useEffect, useState } from "react";
+import { makeStyles, Spinner, tokens } from "@fluentui/react-components";
 import Header from "./components/Header";
 import ButtonsContainer from "./components/ButtonsContainer";
 import StatusContainer from "./components/StatusContainer";
 import CardView from "./components/CardView";
-import { AuthContextProvider } from "./context/AuthContext";
-import { WeatherMoon24Regular, WeatherSunny24Regular } from "@fluentui/react-icons";
+import { useAuth } from "./context/AuthContext";
 import { ThemeProps } from "./types/shared";
+import msGraphService from "./services/ms-graph.service";
 
 const useStyles = makeStyles({
   root: {
@@ -18,23 +18,54 @@ const useStyles = makeStyles({
     padding: "20px",
     gap: "10px",
   },
+  loadingContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+  },
+  loadingText: {
+    marginLeft: "10px",
+    fontSize: "16px",
+    color: tokens.colorNeutralForeground1,
+  },
 });
 
 const App: React.FC<ThemeProps> = ({ theme, setTheme }) => {
   const styles = useStyles();
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
+  const { signOut } = useAuth();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        setLoading(true);
+        await msGraphService.checkAuthenticationStatus();
+      } catch (error) {
+        console.log("Authentication check failed: ", error);
+        signOut();
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuthStatus();
+  }, []);
 
   return (
-    <AuthContextProvider>
-      <div className={styles.root}>
-        <Header theme={theme} setTheme={setTheme} />
-        <ButtonsContainer />
-        <StatusContainer />
-        <CardView />
-      </div>
-    </AuthContextProvider>
+    <div className={styles.root}>
+      <Header theme={theme} setTheme={setTheme} />
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <Spinner label="Loading..." size="medium" />
+        </div>
+      ) : (
+        <>
+          <ButtonsContainer />
+          <StatusContainer />
+          <CardView />
+        </>
+      )}
+    </div>
   );
 };
 

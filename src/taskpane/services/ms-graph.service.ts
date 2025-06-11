@@ -83,6 +83,7 @@ class MsGraphService {
       });
     } catch (err) {
       console.log("Error during Microsoft Graph login:", err);
+      throw err;
     }
   }
 
@@ -157,6 +158,19 @@ class MsGraphService {
       console.log("Email data sent successfully.");
     } catch (error) {
       console.error("Error during save operation:", error);
+      throw error;
+    }
+  }
+
+  async checkAuthenticationStatus(): Promise<boolean> {
+    try {
+      await axiosClient.post("/ms-graph/auth/check-authentication-status-outlook-plugin", {
+        email: localStorageService.getItemFromLocalStorage("msPrincipal"),
+      });
+      return true;
+    } catch (error) {
+      console.error("Error checking authentication status:", error);
+      return false;
     }
   }
 }
