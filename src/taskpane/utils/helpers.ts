@@ -78,17 +78,43 @@ export const getComposeAttachmentContent = (attachmentId: string): Promise<strin
   });
 };
 
-/**
- * Retrieves an email attachment as a `File` object from the Outlook Compose API.
- *
- * This function uses the Office.js API to fetch the content of the specified attachment,
- * converts it into a `Blob`, and then wraps it in a `File` object with the original attachment name.
- *
- * @param attachment - The attachment details object from the Office Compose API.
- * @returns A promise that resolves to a `File` object representing the attachment.
- *
- * @throws Will reject the promise if the attachment content cannot be retrieved or processed.
- */
+export const getMimeTypeFromFilename = (filename: string): string => {
+  const extension = filename.split(".").pop()?.toLowerCase();
+
+  const mimeTypes: Record<string, string> = {
+    pdf: "application/pdf",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    doc: "application/msword",
+    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    xls: "application/vnd.ms-excel",
+    pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    ppt: "application/vnd.ms-powerpoint",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    png: "image/png",
+    gif: "image/gif",
+    txt: "text/plain",
+    html: "text/html",
+    csv: "text/csv",
+    zip: "application/zip",
+    json: "application/json",
+    xml: "application/xml",
+    // Add more as needed
+  };
+
+  return mimeTypes[extension || ""] || "application/octet-stream";
+};
+
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
 export const getAttachmentAsFile = async (
   attachment: Office.AttachmentDetailsCompose
 ): Promise<File> => {
@@ -96,23 +122,18 @@ export const getAttachmentAsFile = async (
     Office.context.mailbox.item.getAttachmentContentAsync(attachment.id, async (result) => {
       if (result.status === Office.AsyncResultStatus.Succeeded) {
         try {
+          const mimeType = getMimeTypeFromFilename(attachment.name);
           let blob: Blob;
 
           if (typeof result.value.content === "string") {
-            // Text-based attachment
-            blob = new Blob([result.value.content], {
-              type: attachment.attachmentType || "text/plain",
-            });
+            const byteArray = base64ToUint8Array(result.value.content);
+            blob = new Blob([byteArray], { type: mimeType });
           } else {
-            // Binary attachment
-            blob = new Blob([result.value.content], {
-              type: attachment.attachmentType || "application/octet-stream",
-            });
+            blob = new Blob([result.value.content], { type: mimeType });
           }
 
-          // Convert to File object
           const file = new File([blob], attachment.name, {
-            type: blob.type,
+            type: mimeType,
             lastModified: Date.now(),
           });
 

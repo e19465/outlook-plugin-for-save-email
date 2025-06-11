@@ -149,9 +149,6 @@ class MsGraphService {
       formData.append("bodyHtml", bodyHtml);
 
       for (const attachment of attachments) {
-        console.log("Processing attachment:", attachment.name);
-        console.log("attachment type:", attachment.attachmentType);
-        console.log("type: ", typeof attachment);
         const file = await getAttachmentAsFile(attachment);
         formData.append("attachments", file);
       }

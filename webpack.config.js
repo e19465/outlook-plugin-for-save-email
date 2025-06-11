@@ -130,7 +130,7 @@ module.exports = async (env, options) => {
             ? options.https
             : await getHttpsOptions(),
       },
-      port: process.env.npm_package_config_dev_server_port || 3000,
+      port: process.env.NPM_PACKAGE_CONFIG_DEV_SERVER_PORT || 3000,
     },
   };
 
