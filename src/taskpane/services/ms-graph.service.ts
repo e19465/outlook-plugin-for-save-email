@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import { MicrosoftRedirectUrls } from "../utils/constants";
+import { Axios, AxiosError, AxiosResponse } from "axios";
+import { CUSTOM_MS_ERROR_CODES_FOR_PLUGIN, MicrosoftRedirectUrls } from "../utils/constants";
 import { MicrosoftLoginResponse } from "../types/ms-graph-responses";
 import localStorageService from "./local-storage.service";
 import axiosClient from "../config/axios-client";
@@ -62,8 +62,14 @@ class MsGraphService {
               });
             } catch (error) {
               console.error("Error fetching token:", error);
-              dialog.close();
-              return;
+              if (
+                error instanceof AxiosError &&
+                error.response.data?.message === CUSTOM_MS_ERROR_CODES_FOR_PLUGIN.EmailNotPermitted
+              ) {
+                dialog.messageChild(MicrosoftRedirectUrls.redirectUrlEmailNotPermitted);
+              } else {
+                dialog.messageChild(MicrosoftRedirectUrls.redirectUrlError);
+              }
             }
 
             const data: MicrosoftLoginResponse = response.data.data;

@@ -6,8 +6,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 
-const urlDev = "https://localhost:3000/";
-const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+const urlDev = process.env.REACT_APP_NPM_PACKAGE_DEV_SERVER_URL || "https://localhost:3000/";
+const urlProd = process.env.REACT_APP_NPM_PACKAGE_PRODUCTION_URL || "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
 
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
@@ -107,6 +107,11 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "authentication_successful.html",
         template: "./src/taskpane/dialog-pages/authentication_successful.html",
+        inject: false,
+      }),
+      new HtmlWebpackPlugin({
+        filename: "email_not_permitted.html",
+        template: "./src/taskpane/dialog-pages/email_not_permitted.html",
         inject: false,
       }),
       new webpack.ProvidePlugin({
