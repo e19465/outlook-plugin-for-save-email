@@ -74,7 +74,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
           <DialogContent>
             <Body1 className={styles.saveTextContainer}>
               <div className={generalStyles.textCenter}>
-                This will save the current email to your OneDrive as a PDF file with all
+                This will save the current email to your OneDrive as a HTML file with all
                 attachments.
               </div>
               {isError && (
