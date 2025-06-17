@@ -87,11 +87,6 @@ module.exports = async (env, options) => {
               }
             },
           },
-          {
-            from: "src/_redirects",
-            to: "_redirects",
-            noErrorOnMissing: true,
-          },
         ],
       }),
       new HtmlWebpackPlugin({
