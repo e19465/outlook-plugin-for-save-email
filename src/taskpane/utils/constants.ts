@@ -1,5 +1,5 @@
 export const MicrosoftRedirectUrls = {
-  homePageUrl: `${process.env.REACT_APP_FRONTEND_BASE_URL}/homepage.html`,
+  homePageUrl: `${process.env.REACT_APP_FRONTEND_BASE_URL}/index.html`,
   notFoundUrl: `${process.env.REACT_APP_FRONTEND_BASE_URL}/not-found.html`,
   loginRedirectUrl: `${process.env.REACT_APP_FRONTEND_BASE_URL}/redirect.html`,
   redirectUrlSuccessfullAuth: `${process.env.REACT_APP_FRONTEND_BASE_URL}/authentication_successful.html`,
