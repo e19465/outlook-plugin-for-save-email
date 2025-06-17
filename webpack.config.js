@@ -87,6 +87,11 @@ module.exports = async (env, options) => {
               }
             },
           },
+          {
+            from: "src/_redirects",
+            to: "_redirects",
+            noErrorOnMissing: true,
+          },
         ],
       }),
       new HtmlWebpackPlugin({
@@ -124,10 +129,6 @@ module.exports = async (env, options) => {
         template: "./src/taskpane/pages/not-found.html",
         inject: false,
       }),
-      {
-        from: "src/_redirects",
-        to: "_redirects",
-      },
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
