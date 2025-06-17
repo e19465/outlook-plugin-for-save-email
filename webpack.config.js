@@ -115,8 +115,8 @@ module.exports = async (env, options) => {
         inject: false,
       }),
       new HtmlWebpackPlugin({
-        filename: "homepage.html",
-        template: "./src/taskpane/pages/homepage.html",
+        filename: "index.html",
+        template: "./src/taskpane/pages/index.html",
         inject: false,
       }),
       new HtmlWebpackPlugin({
@@ -124,6 +124,10 @@ module.exports = async (env, options) => {
         template: "./src/taskpane/pages/not-found.html",
         inject: false,
       }),
+      {
+        from: "src/_redirects",
+        to: "_redirects",
+      },
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
@@ -144,7 +148,7 @@ module.exports = async (env, options) => {
 
       historyApiFallback: {
         rewrites: [
-          { from: /^\/$/, to: "/homepage.html" }, // root → homepage
+          { from: /^\/$/, to: "/index.html" }, // root → homepage
         ],
         // fallback to not-found.html for unmatched paths
         index: "/not-found.html",
