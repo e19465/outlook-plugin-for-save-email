@@ -114,6 +114,16 @@ module.exports = async (env, options) => {
         template: "./src/taskpane/dialog-pages/email_not_permitted.html",
         inject: false,
       }),
+      new HtmlWebpackPlugin({
+        filename: "homepage.html",
+        template: "./src/taskpane/pages/homepage.html",
+        inject: false,
+      }),
+      new HtmlWebpackPlugin({
+        filename: "not-found.html",
+        template: "./src/taskpane/pages/not-found.html",
+        inject: false,
+      }),
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
@@ -130,7 +140,15 @@ module.exports = async (env, options) => {
             ? options.https
             : await getHttpsOptions(),
       },
-      port: process.env.NPM_PACKAGE_CONFIG_DEV_SERVER_PORT || 3000,
+      port: process.env.REACT_APP_NPM_PACKAGE_CONFIG_DEV_SERVER_PORT || 3000,
+
+      historyApiFallback: {
+        rewrites: [
+          { from: /^\/$/, to: "/homepage.html" }, // root → homepage
+        ],
+        // fallback to not-found.html for unmatched paths
+        index: "/not-found.html",
+      },
     },
   };
 
